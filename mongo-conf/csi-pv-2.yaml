@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-server-data-2
+  namespace: linklab
+  labels:
+    alicloud-pvname: mongo-server-data-2
+    storage-class: mongo-server-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  csi:
+    driver: nasplugin.csi.alibabacloud.com
+    volumeAttributes:
+      path: /nfs/data/mongodb/data-2
+      server: 043944ae96-buv89.cn-hangzhou.nas.aliyuncs.com
+      vers: '3'
+    volumeHandle: mongo-server-data-2
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nas
+  volumeMode: Filesystem

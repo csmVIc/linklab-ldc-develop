@@ -1,0 +1,55 @@
+{
+  "redis": {
+    "client": {
+      "address": [
+        {
+          "host": "redis-server-master",
+          "port": "6379"
+        },
+        {
+          "host": "redis-server-slave",
+          "port": "6379"
+        }
+      ],
+      "password": "41eb37269c0525a25ea19b59f65d12414f103556e5ab1f7a7e7d3e3553ee9941"
+    },
+    "distributedlock": {
+      "timeout": 80,
+      "maxretry": 800,
+      "rintervalms": 100
+    }
+  },
+  "nats": {
+    "client": {
+      "url": "nats://nats-server:4222",
+      "clusterid": "stan",
+      "needstan": false
+    }
+  },
+  "mongo": {
+    "client": {
+      "user": "DeviceControl",
+      "password": "12",
+      "db": "linklab",
+      "address": [
+        {
+          "host": "mongo-server-headless",
+          "port": "27017"
+        }
+      ],
+      "replicaset": "rs0"
+    },
+    "transaction": {
+      "timeout": 5
+    }
+  },
+  "sub": {
+    "topic": {
+      "podapply": "edgeclients.pod.apply",
+      "imagebuild": "edgeclients.image.build"
+    },
+    "maxreconn": 3,
+    "reconninterval": 2,
+    "maxcreategroupidretry": 3
+  }
+}

@@ -1,0 +1,5 @@
+## permission
+ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", MODE="666", GROUP="plugdev"
+
+## ESP32DevKitCidf
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK="ESP32DevKitCidf-%s{devpath}"

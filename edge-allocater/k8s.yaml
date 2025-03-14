@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: edge-allocater
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-allocater
+  template:
+    metadata:
+      labels:
+        app: edge-allocater
+    spec:
+      containers: 
+      - name: edge-allocater
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-edge-allocater:v2.1-amd64
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+          requests:
+            memory: "10Mi"
+            cpu: "10m"
+          limits:
+            memory: "100Mi"
+            cpu: "500m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: edge-allocater-config
+      imagePullSecrets:
+        - name: linklab-aliyun

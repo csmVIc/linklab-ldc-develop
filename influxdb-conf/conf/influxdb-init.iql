@@ -1,0 +1,5 @@
+CREATE DATABASE devicecontrollog;
+CREATE USER devicecontroller WITH PASSWORD '12';
+GRANT WRITE ON "devicecontrollog" TO "devicecontroller";
+CREATE USER dataexporter WITH PASSWORD '12';
+GRANT READ ON "devicecontrollog" TO "dataexporter";

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: edge-test
+  labels:
+    app: edge-test
+spec:
+  # restartPolicy: Never
+  restartPolicy: OnFailure
+  containers:
+  - name: edge-test
+    image: edge_test:v2.0
+    env:
+    - name: PYTHONUNBUFFERED
+      value: "1"
+    - name: ENABLE_EDGE_SOCKET
+      value: "true"
+    # args: ["/bin/bash","-c","python3 edge_socket.py --podname cloud-test-1 --namespace cce85e723d6886c97e13c3a7adae9841 --port 99"]
+    # args: ["/bin/bash","-c","while true; do date; sleep 10; done"]
+    ports:                        # 添加端口配置
+    - containerPort: 99          # 声明容器端口
+      protocol: TCP              # 协议类型

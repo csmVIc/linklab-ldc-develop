@@ -1,0 +1,95 @@
+{
+    "compile": {
+        "commands": {
+            "contiki-ng": {
+                "type": "compile",
+                "supsys": true,
+                "branch": "develop",
+                "rootdir": "/app/workspace",
+                "indir": "/app/workspace/examples/helloworld",
+                "outdir": "/app/workspace/examples/helloworld",
+                "rregex": ".*\\.boardtype",
+                "cmd": "cd /app/workspace/examples/helloworld && chmod +x compile.sh && BACKUPDIR=../../backup BOARDTYPE=boardtype ./compile.sh",
+                "errflag": "Error"
+            },
+            "contiki-ng-virtual": {
+                "type": "compile",
+                "supsys": true,
+                "branch": "virtual",
+                "rootdir": "/app/workspace",
+                "indir": "/app/workspace/examples/helloworld",
+                "outdir": "/app/workspace/examples/helloworld",
+                "rregex": ".*\\.boardtype",
+                "cmd": "cd /app/workspace/examples/helloworld && chmod +x compile.sh && BACKUPDIR=../../backup BOARDTYPE=boardtype ./compile.sh",
+                "errflag": "Error"
+            }
+        },
+        "directory": {
+            "tmp": "./tmp",
+            "workspace": "./workspace",
+            "initzip": "./init/contiki-ng.zip"
+        },
+        "channel": {
+            "size": 5,
+            "timeout": 180
+        }
+    },
+    "subscriber": {
+        "example": {
+            "topic": "compile.task",
+            "queue": "worker"
+        },
+        "system": {
+            "topic": "compile.system",
+            "queue": "worker"
+        }
+    },
+    "log": {
+        "logs": {
+            "compilelog": {
+                "pointname": "compilelog"
+            }
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    }
+}

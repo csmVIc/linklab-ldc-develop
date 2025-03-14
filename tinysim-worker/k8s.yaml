@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: compilev2-tinysim-worker-init-pvc
+  namespace: linklab
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: linklab-compilev2-tinysim-worker-init
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: compilev2-tinysim-worker
+  namespace: linklab
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: compilev2-tinysim-worker
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 200
+---
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+    name: compilev2-tinysim-worker
+    namespace: linklab
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: compilev2-tinysim-worker
+    serviceName: compilev2-tinysim-worker
+    volumeClaimTemplates:
+    - metadata:
+        name: writespace-volume
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "linklab-compilev2-tinysim-worker-writespace"
+        resources:
+          requests:
+            storage: 2Gi
+    template:
+      metadata:
+        labels:
+          app: compilev2-tinysim-worker
+      spec:
+        imagePullSecrets:
+          - name: linklab-aliyun
+        containers: 
+        - name: worker 
+          image: registry.cn-hangzhou.aliyuncs.com/linklab/tinysim-worker:v1.0-test
+          imagePullPolicy: Always
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          resources:
+            requests:
+              memory: "20Mi"
+              cpu: "10m"
+            limits:
+              memory: "800Mi"
+              cpu: "7000m"
+          volumeMounts:
+          - mountPath: /app/workspace
+            name: writespace-volume
+          - mountPath: /app/init
+            name: init-volume
+          - mountPath: /app/config/config.json
+            name: worker-config
+            subPath: config.json
+        volumes:
+        - name: init-volume
+          persistentVolumeClaim:
+            claimName: compilev2-tinysim-worker-init-pvc
+        - name: worker-config
+          configMap:
+            name: tinysim-worker-config

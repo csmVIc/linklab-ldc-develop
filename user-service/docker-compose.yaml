@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+
+  user-service:
+    container_name: user-service
+    restart: unless-stopped
+    image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-user-service:v1.0
+    volumes: 
+        - ./config/config.json:/app/config/config.json:ro
+        - ./log:/app/log
+    ports: 
+        - "8080:8080"
+    networks: 
+        - device_control_v2
+
+networks: 
+    device_control_v2:
+        external: 
+            name: device_control_v2
+        

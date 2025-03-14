@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: jlink-client
+  namespace: linklab
+  labels:
+    k8s-app: jlink-client
+spec:
+  selector:
+    matchLabels:
+      name: jlink-client
+  template:
+    metadata:
+      labels:
+        name: jlink-client
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: linklab/jlink.client
+                operator: Exists
+      imagePullSecrets:
+      - name: linklab-aliyun
+      containers:
+      - name:  jlink-client
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-jlink-client:v1.0
+        imagePullPolicy: Always
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        - name: dev-volume
+          mountPath: /dev
+          readOnly: false
+      volumes:
+      - name: config-volume
+        hostPath:
+          path: /home/pi/linklab-ldc/jlink-client/config
+      - name: dev-volume
+        hostPath:
+          path: /dev

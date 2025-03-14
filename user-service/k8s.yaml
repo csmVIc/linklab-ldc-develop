@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: linklab
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 31958
+  selector:
+    app: user-service
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-service
+  namespace: linklab
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user-service
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 200
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: user-service
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers: 
+      - name: user-service
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-user-service:v2.1-beta
+        # image: user-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: user-service
+        resources:
+          requests:
+            memory: "15Mi"
+            cpu: "10m"
+          limits:
+            memory: "120Mi"
+            cpu: "1000m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: user-service-config
+            items:
+            - key: k8s-config.json
+              path: config.json
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun

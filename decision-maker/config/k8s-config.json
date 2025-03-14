@@ -1,0 +1,97 @@
+{
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    },
+    "redis": {
+        "client": {
+            "address": [
+                {
+                    "host": "redis-server-master",
+                    "port": "6379"
+                },
+                {
+                    "host": "redis-server-slave",
+                    "port": "6379"
+                }
+            ],
+            "password": "41eb37269c0525a25ea19b59f65d12414f103556e5ab1f7a7e7d3e3553ee9941"
+        },
+        "distributedlock": {
+            "timeout": 80,
+            "maxretry": 800,
+            "rintervalms": 100
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "task": {
+        "sub": {
+            "topic": "tasks.wait",
+            "grouptopic": "tasks.group.wait",
+            "maxreconn": 3,
+            "reconninterval": 2,
+            "maxcreategroupidretry": 3
+        },
+        "judge": {
+            "sleepmill": 1000,
+            "maxreconn": 1,
+            "reconninterval": 2
+        },
+        "pub": {
+            "user": {
+                "topic": "users.log.%v"
+            },
+            "client": {
+                "burn": {
+                    "topic": "clients.cmd.burn.%v"
+                }
+            }
+        }
+    },
+    "log": {
+        "logs": {
+            "taskallocate": {
+                "pointname": "taskallocate"
+            },
+            "entertaskswait": {
+                "pointname": "entertaskswait"
+            }
+        }
+    }
+}

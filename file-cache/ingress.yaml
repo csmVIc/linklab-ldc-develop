@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: file-cache
+  namespace: linklab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
+spec:
+  rules:
+  - host: kubernetes.tinylink.cn
+    http:
+      paths:
+      - path: /linklab/device-control-v2/file-cache/api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: file-cache
+            port: 
+              number: 8083

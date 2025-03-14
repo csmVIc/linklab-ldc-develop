@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+
+  file-cache:
+    container_name: file-cache
+    restart: unless-stopped
+    image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-file-cache:v1.0
+    volumes: 
+        - ./config/config.json:/app/config/config.json:ro
+        - ./log:/app/log
+    ports: 
+        - "8083:8083"
+    networks: 
+        - device_control_v2
+
+networks: 
+    device_control_v2:
+        external: 
+            name: device_control_v2
+        

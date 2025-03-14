@@ -1,0 +1,68 @@
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: log-subscription
+  namespace: linklab
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: log-subscription
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 200
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: log-subscription
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-subscription
+  template:
+    metadata:
+      labels:
+        app: log-subscription
+    spec:
+      containers: 
+      - name: log-subscription
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-log-subscription:v2.0-beta
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: log-subscription
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+          requests:
+            memory: "15Mi"
+            cpu: "10m"
+          limits:
+            memory: "120Mi"
+            cpu: "2000m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: log-subscription-config
+            items:
+            - key: k8s-config.json
+              path: config.json
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun

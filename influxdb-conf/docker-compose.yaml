@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  influxdb-server:
+    container_name: influxdb-server
+    restart: unless-stopped
+    image: influxdb:1.8.2-alpine
+    env_file:
+      - ./env/influxdb.env
+    volumes: 
+      - ./conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      - ./conf/influxdb-init.iql:/docker-entrypoint-initdb.d/influxdb-init.iql:ro
+      - ./data:/var/lib/influxdb
+    ports: 
+      - "8086:8086"
+    networks: 
+      - influxdb_network
+      - device_control_v2
+    
+networks: 
+    influxdb_network:
+    device_control_v2:
+      external: 
+          name: device_control_v2

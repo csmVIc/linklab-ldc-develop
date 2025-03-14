@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: user-service-wss
+  namespace: linklab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
+spec:
+  tls:
+  - hosts:
+      - kubernetes.wss.tinylink.cn
+    secretName: kubernetes-wss
+  rules:
+  - host: kubernetes.wss.tinylink.cn
+    http:
+      paths:
+      - path: /linklab/device-control-v2/user-service/api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port: 
+              number: 8080

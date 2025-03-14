@@ -1,0 +1,75 @@
+{
+    "compile": {
+        "commands": {
+            "mbed": {
+                "type": "compile",
+                "indir": "/app/workspace/example",
+                "outdir": "/app/workspace/example/BUILD/boardtype/GCC_ARM",
+                "rregex": "^[a-zA-Z].*\\.bin",
+                "cmd": "cd /app/workspace/example && mbed compile -m boardtype -t GCC_ARM --source . --source ../mbed-os",
+                "errflag": "ERROR"
+            }
+        },
+        "directory": {
+            "tmp": "./tmp",
+            "workspace": "./workspace",
+            "initzip": "./init/mbed.zip"
+        },
+        "channel": {
+            "size": 5,
+            "timeout": 180
+        }
+    },
+    "subscriber": {
+        "topic": "compile.task",
+        "queue": "worker"
+    },
+    "log": {
+        "logs": {
+            "compilelog": {
+                "pointname": "compilelog"
+            }
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    }
+}

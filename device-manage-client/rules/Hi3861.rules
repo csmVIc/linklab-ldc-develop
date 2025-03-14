@@ -1,0 +1,6 @@
+## permission
+ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="666", GROUP="plugdev"
+
+## Hi3861
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK="Hi3861-%s{devpath}"
+

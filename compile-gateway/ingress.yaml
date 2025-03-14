@@ -1,0 +1,20 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: compilev2-gateway
+  namespace: linklab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
+spec:
+  rules:
+  - host: kubernetes.tinylink.cn
+    http:
+      paths:
+      - path: /linklab/compilev2/api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: compilev2-gateway
+            port: 
+              number: 80

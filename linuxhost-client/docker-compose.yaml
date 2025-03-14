@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+
+    linuxhost-client:
+        container_name: linuxhost-client
+        restart: unless-stopped
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-linuxhost-client:v1.0
+        volumes: 
+            - ./config/config.json:/app/config/config.json:ro
+            - ./workspace:/app/workspace:rw
+            - ./tmp:/app/tmp:rw
+            - ./log:/app/log:rw
+        networks: 
+            - linuxhost_client
+
+networks: 
+    linuxhost_client:

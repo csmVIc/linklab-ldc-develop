@@ -1,0 +1,95 @@
+{
+    "mqtt": {
+        "client": {
+            "url": "tcp://8.136.7.91:1883",
+            "username": "ClientTest",
+            "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+        },
+        "monitor": {
+            "maxdisconnwait": 1
+        },
+        "publish": {
+            "timeout": 60
+        }
+    },
+    "topic": {
+        "deviceburn": {
+            "chantimeout": 10
+        },
+        "topics": {
+            "heartbeat": {
+                "pub": "clients/%v/%v/publish/client/heartbeat",
+                "refuse": "clients/%v/%v/subscribe/client/heartbeat/refuse"
+            },
+            "deviceupdate": {
+                "pub": "clients/%v/%v/publish/device/update",
+                "refuse": "clients/%v/%v/subscribe/device/update/refuse"
+            },
+            "authtoken": {
+                "sub": "clients/%v/%v/subscribe/auth/token",
+                "refuse": "clients/%v/%v/subscribe/auth/refuse"
+            },
+            "deviceburn": {
+                "sub": "clients/%v/%v/subscribe/device/burn",
+                "pub": "clients/%v/%v/publish/device/burnresult",
+                "refuse": "clients/%v/%v/subscribe/device/burnresult/refuse"
+            },
+            "devicelog": {
+                "pub": "clients/%v/%v/publish/log/upload",
+                "refuse": "clients/%v/%v/subscribe/log/upload/refuse"
+            },
+            "endrun": {
+                "pub": "clients/%v/%v/publish/device/endrun",
+                "refuse": "clients/%v/%v/subscribe/device/endrun/refuse"
+            }
+        }
+    },
+    "virtualnode": {
+        "devicelog": {
+            "logchansize": 50,
+            "logtimeoutmill": 100,
+            "readsleepmill": 250,
+            "tasktimeoutmill": 100
+        },
+        "boards": {
+            "VirtualDevice": {
+                "burndelay": 6,
+                "logbytes": 32,
+                "virtualnum": 10
+            }
+        }
+    },
+    "monitor": {
+        "heartbeat": {
+            "timeout": 30
+        },
+        "deviceupdate": {
+            "timeout": 30,
+            "detectintervalmill": 100
+        },
+        "chan": {
+            "burnsize": 10,
+            "tasksize": 10
+        },
+        "token": {
+            "inittimeout": 10
+        },
+        "burn": {
+            "threadmultiple": 100,
+            "maxfiledownloadretry": 10,
+            "filedownloadretryinterval": 2
+        },
+        "task": {
+            "threadmultiple": 100
+        },
+        "api": {
+            "tmpdir": "./tmp",
+            "token": {
+                "chansize": 10
+            },
+            "filedownload": {
+                "url": "http://api.testbd.tinylink.cn/linklab/device-control-v2/file-cache/api/file"
+            }
+        }
+    }
+}

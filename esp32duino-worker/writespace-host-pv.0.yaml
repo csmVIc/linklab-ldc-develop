@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: linklab-compilev2-esp32duino-worker-writespace.0-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: linklab-compilev2-esp32duino-worker-writespace
+  hostPath:
+    path: /home/kaikai/new-linklab/linklab-ldc/nfs/data/compile-worker/esp32duino-worker/writespace.0

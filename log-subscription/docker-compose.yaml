@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+
+  log-subscription:
+    container_name: log-subscription
+    restart: unless-stopped
+    image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-log-subscription:v1.0
+    volumes: 
+        - ./config/config.json:/app/config/config.json:ro
+        - ./log/gin.log:/app/log/gin.log
+        - ./log/logrus.log:/app/log/logrus.log
+    networks: 
+        - device_control_v2
+
+networks: 
+    device_control_v2:
+        external: 
+            name: device_control_v2
+        

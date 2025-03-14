@@ -1,0 +1,84 @@
+{
+    "compile": {
+        "commands": {
+            "openharmony": {
+                "type": "compile",
+                "supsys": true,
+                "branch": "neptune",
+                "rootdir": "/app/workspace",
+                "indir": "/app/workspace/os/applications/sample/component_demo",
+                "outdir": "/app/workspace/os/out/hispark_pegasus/wifiiot_hispark_pegasus/",
+                "rregex": "^[a-zA-Z].*allinone\\.bin",
+                "cmd": "cd /app/workspace/os && ./compile.sh",
+                "errflag": "failed"
+            }
+        },
+        "directory": {
+            "tmp": "./tmp",
+            "workspace": "./workspace",
+            "initzip": "./init/openharmony.zip"
+        },
+        "channel": {
+            "size": 5,
+            "timeout": 180
+        }
+    },
+    "subscriber": {
+        "example": {
+            "topic": "compile.task",
+            "queue": "worker"
+        },
+        "system": {
+            "topic": "compile.system",
+            "queue": "worker"
+        }
+    },
+    "log": {
+        "logs": {
+            "compilelog": {
+                "pointname": "compilelog"
+            }
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    }
+}

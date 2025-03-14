@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: virtual-device-client-writespace.9-pv
+  namespace: linklab
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  csi:
+    driver: nasplugin.csi.alibabacloud.com
+    volumeAttributes:
+      path: /nfs/data/virtual-device-client/writespace.9
+      server: 043944ae96-buv89.cn-hangzhou.nas.aliyuncs.com
+      vers: '3'
+    volumeHandle: virtual-device-client-writespace.9-pv
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: virtual-device-client-writespace
+  volumeMode: Filesystem

@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+
+    device-manage-client:
+        container_name: device-manage-client
+        restart: unless-stopped
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-device-manage-client:v1.6-amd64
+        volumes: 
+            - ./config/config.json:/app/config/config.json:ro
+            - ./tmp:/app/tmp:rw
+            - ./log:/app/log:rw
+            - /dev:/dev:rw
+        privileged: true
+        # networks: 
+        #      - device_manage_client
+        network_mode: host
+
+networks: 
+    device_manage_client:

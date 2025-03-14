@@ -1,0 +1,41 @@
+{
+    "monitor": {
+        "metricsmap": {
+            "podmetrics": {
+                "interval": 1,
+                "namespace": "linklab"
+            },
+            "nodemetrics": {
+                "interval": 1,
+                "namespace": ""
+            }
+        }
+    },
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    },
+    "log": {
+        "logs": {
+            "podmetrics": {
+                "pointname": "podmetrics"
+            },
+            "nodemetrics": {
+                "pointname": "nodemetrics"
+            }
+        }
+    }
+}

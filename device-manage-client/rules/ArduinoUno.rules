@@ -1,0 +1,11 @@
+## permission
+ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0043", MODE="666", GROUP="plugdev"
+ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0243", MODE="666", GROUP="plugdev"
+ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="0411", MODE="666", GROUP="plugdev"
+ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", MODE="666", GROUP="plugdev"
+
+## ArduinoUno
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0043", SYMLINK="ArduinoUno-%s{devpath}"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0243", SYMLINK="ArduinoUno-%s{devpath}"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="0411", SYMLINK="ArduinoUno-%s{devpath}"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", SYMLINK="ArduinoUno-%s{devpath}"

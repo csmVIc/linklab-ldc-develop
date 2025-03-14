@@ -1,0 +1,91 @@
+{
+  "mqtt": {
+    "client": {
+      "url": "tcp://47.111.141.133:31077",
+      "username": "LinuxHost-100",
+      "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+    },
+    "monitor": {
+      "maxdisconnwait": 1
+    },
+    "publish": {
+      "timeout": 60
+    }
+  },
+  "topic": {
+    "deviceburn": {
+      "chantimeout": 10
+    },
+    "topics": {
+      "heartbeat": {
+        "pub": "clients/%v/%v/publish/client/heartbeat",
+        "refuse": "clients/%v/%v/subscribe/client/heartbeat/refuse"
+      },
+      "deviceupdate": {
+        "pub": "clients/%v/%v/publish/device/update",
+        "refuse": "clients/%v/%v/subscribe/device/update/refuse"
+      },
+      "authtoken": {
+        "sub": "clients/%v/%v/subscribe/auth/token",
+        "refuse": "clients/%v/%v/subscribe/auth/refuse"
+      },
+      "deviceburn": {
+        "sub": "clients/%v/%v/subscribe/device/burn"
+      },
+      "devicelog": {
+        "pub": "clients/%v/%v/publish/log/upload",
+        "refuse": "clients/%v/%v/subscribe/log/upload/refuse"
+      },
+      "endrun": {
+        "pub": "clients/%v/%v/publish/device/endrun",
+        "refuse": "clients/%v/%v/subscribe/device/endrun/refuse"
+      },
+      "execerr": {
+        "pub": "clients/%v/%v/publish/device/execerr",
+        "refuse": "clients/%v/%v/subscribe/device/execerr/refuse"
+      }
+    }
+  },
+  "aiboxnode": {
+    "workspace": "./workspace",
+    "devicelog": {
+      "logchansize": 50,
+      "logtimeoutmill": 100
+    },
+    "boards": {
+      "AIBox": {
+        "virtualnum": 1,
+        "execcmd": "python3 main.py"
+      }
+    }
+  },
+  "monitor": {
+    "heartbeat": {
+      "timeout": 10
+    },
+    "deviceupdate": {
+      "timeout": 20,
+      "detectintervalmill": 100
+    },
+    "chan": {
+      "burnsize": 10
+    },
+    "token": {
+      "inittimeout": 10
+    },
+    "exec": {
+      "threadmultiple": 20,
+      "maxfiledownloadretry": 10,
+      "filedownloadretryinterval": 2
+    },
+    "api": {
+      "tmpdir": "./tmp",
+      "token": {
+        "chansize": 10
+      },
+      "filedownload": {
+        "url": "https://kubernetes.tinylink.cn/linklab/device-control-v2/file-cache/api/file"
+      }
+    }
+  }
+}

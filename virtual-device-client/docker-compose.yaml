@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+
+    virtual-device-client:
+        container_name: virtual-device-client
+        restart: unless-stopped
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-virtual-device-client:v1.0
+        volumes: 
+            - ./config/config.json:/app/config/config.json:ro
+            - ./tmp:/app/tmp:rw
+            - ./log:/app/log:rw
+        networks: 
+            - virtual_device_client
+
+networks: 
+    virtual_device_client:

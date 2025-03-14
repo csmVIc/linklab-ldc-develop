@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  emqx-server:
+    container_name: emqx-server
+    restart: unless-stopped
+    image: emqx/emqx:4.2.1
+    env_file: 
+      - ./config/emqx.env
+    volumes: 
+      - ./etc/acl.conf:/opt/emqx/etc/acl.conf:ro
+      - ./log:/opt/emqx/log:rw
+    ports: 
+      - "1883:1883"
+      - "18083:18083"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    networks: 
+      - emqx_network
+      - device_control_v2
+    
+networks: 
+    emqx_network:
+    device_control_v2:
+      external: 
+          name: device_control_v2

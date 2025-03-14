@@ -1,0 +1,127 @@
+package edgenode
+
+import (
+	"encoding/json"
+	"fmt"
+
+	log "github.com/sirupsen/logrus"
+	apiv1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/api/extensions/v1beta1"
+	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/apimachinery/pkg/util/yaml"
+)
+
+// LinkPodIngress 关联PodIngress
+func (ed *Driver) LinkPodIngress(podYaml []byte, namespace string) (*map[string]string, error) {
+    log.Debugf("文件<linkingress> 开始处理Pod Ingress配置 - 命名空间: %s", namespace)
+
+	podJson, err := yaml.ToJSON(podYaml)
+	if err != nil {
+		err = fmt.Errorf("yaml.ToJSON error {%v}", err)
+		log.Error(err)
+		return nil, err
+	}
+    log.Debugf("YAML转JSON成功")
+
+	podConfig := &apiv1.Pod{}
+	if err := json.Unmarshal(podJson, podConfig); err != nil {
+		err = fmt.Errorf("json.Unmarshal error {%v}", err)
+		log.Error(err)
+		return nil, err
+	}
+    log.Debugf("解析Pod配置成功 - Pod名称: %s", podConfig.Name)
+
+	// Service
+	svcConfig := &corev1.Service{}
+	svcConfig.Name = podConfig.Name
+	svcConfig.Namespace = namespace
+	svcConfig.Spec.Type = corev1.ServiceTypeClusterIP
+	svcConfig.Spec.Ports = []corev1.ServicePort{}
+	svcConfig.Spec.Selector = map[string]string{"name": podConfig.Name}
+
+	log.Debugf("创建Service配置:")
+    log.Debugf("- 服务名称: %s", svcConfig.Name)
+    log.Debugf("- 服务类型: %s", svcConfig.Spec.Type)
+    log.Debugf("- 选择器: %+v", svcConfig.Spec.Selector)
+
+	// Ingress
+	ingressConfig := &v1beta1.Ingress{}
+	ingressConfig.Name = podConfig.Name
+	ingressConfig.Namespace = namespace
+	ingressConfig.Annotations = map[string]string{"nginx.ingress.kubernetes.io/rewrite-target": "/$2"}
+	ingressConfig.Spec.Rules = []v1beta1.IngressRule{}
+	ingressConfig.Spec.Rules = append(ingressConfig.Spec.Rules, v1beta1.IngressRule{
+		Host: ed.info.Ingress.Domain,
+		IngressRuleValue: v1beta1.IngressRuleValue{
+			HTTP: &v1beta1.HTTPIngressRuleValue{
+				Paths: []v1beta1.HTTPIngressPath{},
+			},
+		},
+	})
+	log.Debugf("创建Ingress配置:")
+    log.Debugf("- Ingress名称: %s", ingressConfig.Name)
+    log.Debugf("- Ingress域名: %s", ed.info.Ingress.Domain)
+    log.Debugf("- Ingress注解: %+v", ingressConfig.Annotations)
+
+	// 回复结果
+	res := map[string]string{}
+
+	// 端口映射关系
+	log.Debugf("开始处理容器端口映射:")
+	for i, containerInfo := range podConfig.Spec.Containers {
+		log.Debugf("处理容器[%d] - 名称: %s", i, containerInfo.Name)
+		for _, portInfo := range containerInfo.Ports {
+            log.Debugf("- 处理端口: %d", portInfo.ContainerPort)
+
+			svcConfig.Spec.Ports = append(svcConfig.Spec.Ports, corev1.ServicePort{
+				Port: portInfo.ContainerPort,
+			})
+            log.Debugf("  - 添加到Service端口配置: %d", portInfo.ContainerPort)
+
+            // 构建Ingress路径
+            ingressPath := fmt.Sprintf("/%s/%s/port%v(/|$)(.*)", namespace, svcConfig.Name, portInfo.ContainerPort)
+			ingressConfig.Spec.Rules[0].HTTP.Paths = append(ingressConfig.Spec.Rules[0].HTTP.Paths, v1beta1.HTTPIngressPath{
+				Path: fmt.Sprintf("/%s/%s/port%v(/|$)(.*)", namespace, svcConfig.Name, portInfo.ContainerPort),
+				Backend: v1beta1.IngressBackend{
+					ServiceName: svcConfig.Name,
+					ServicePort: intstr.IntOrString{
+						Type:   intstr.Int,
+						IntVal: portInfo.ContainerPort,
+					},
+				},
+			})
+            log.Debugf("  - 添加Ingress路径: %s", ingressPath)
+
+			res[fmt.Sprintf("%v", portInfo.ContainerPort)] = fmt.Sprintf("http://%v%v", ed.info.Ingress.Domain, fmt.Sprintf("/%s/%s/port%v", namespace, svcConfig.Name, portInfo.ContainerPort))
+
+		}
+	}
+
+	// 服务没有暴露任何端口号
+	if len(svcConfig.Spec.Ports) < 1 {
+		log.Debugf("未检测到任何端口配置，跳过Service和Ingress创建")
+		return nil, nil
+	}
+
+	// 创建服务
+	log.Debugf("开始创建Service - 名称: %s, 端口数量: %d", svcConfig.Name, len(svcConfig.Spec.Ports))
+	if err := ed.ServiceApplyByConfig(svcConfig, namespace); err != nil {
+		log.Error(err)
+		return nil, err
+	}
+    log.Debugf("Service创建成功")
+
+	// 创建Ingress
+	log.Debugf("开始创建Ingress - 名称: %s, 路径数量: %d", ingressConfig.Name, len(ingressConfig.Spec.Rules[0].HTTP.Paths))
+	if err := ed.IngressApplyByConfig(ingressConfig, namespace); err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	log.Debugf("Ingress创建成功")
+
+    log.Debugf("端口映射配置完成，总计 %d 个映射", len(res))
+    log.Debugf("linkgress文件阅读完毕")
+
+	return &res, nil
+}

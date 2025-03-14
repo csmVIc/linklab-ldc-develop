@@ -1,0 +1,45 @@
+{
+    "server": {
+        "address": {
+            "host": "0.0.0.0",
+            "port": "80"
+        },
+        "handler": {
+            "download": {
+                "timeout": 120
+            },
+            "upload": {
+                "topic": "compile.task",
+                "replytimeout": 5
+            },
+            "compilesystem": {
+                "topic": "compile.system",
+                "replytimeout": 5
+            }
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    }
+}

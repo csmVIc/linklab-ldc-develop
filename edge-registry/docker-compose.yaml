@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+
+    edge-registry:
+        container_name: edge-registry
+        restart: always
+        image: registry:2.7.1
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./data:/var/lib/registry:rw

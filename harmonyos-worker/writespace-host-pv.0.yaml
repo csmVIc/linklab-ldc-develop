@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: linklab-compilev2-harmonyos-worker-writespace.0-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: linklab-compilev2-harmonyos-worker-writespace
+  hostPath:
+    path: /root/yangg/device-control-v2/nfs/data/compile-worker/harmonyos-worker/writespace.0

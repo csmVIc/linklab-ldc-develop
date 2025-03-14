@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: static-file-service-data-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: static-file-service-data
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /root/yangg/device-control-v2/nfs/data/static-file-service/data
+    server: 172.16.98.74

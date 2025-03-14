@@ -1,0 +1,5 @@
+## permission
+ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", MODE="666", GROUP="plugdev"
+
+## Haas100
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK="Haas100-%s{devpath}"

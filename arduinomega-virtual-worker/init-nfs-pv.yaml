@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: linklab-compilev2-arduinomega-virtual-worker-init-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: linklab-compilev2-arduinomega-virtual-worker-init
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /root/yangg/device-control-v2/nfs/data/compile-worker/arduinomega-virtual-worker/init
+    server: 172.16.98.74

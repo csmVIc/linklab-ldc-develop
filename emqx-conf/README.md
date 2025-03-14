@@ -1,0 +1,1 @@
+helm repo add emqx https://repos.emqx.io/charts

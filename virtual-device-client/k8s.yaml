@@ -1,0 +1,84 @@
+# ---
+# apiVersion: autoscaling/v1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: virtual-device-client
+#   namespace: linklab
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: StatefulSet
+#     name: virtual-device-client
+#   minReplicas: 1
+#   maxReplicas: 10
+#   targetCPUUtilizationPercentage: 100
+---
+apiVersion: apps/v1 
+kind: StatefulSet 
+metadata: 
+  name: virtual-device-client
+  namespace: linklab
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: virtual-device-client
+  serviceName: virtual-device-client
+  volumeClaimTemplates:
+  - metadata:
+      name: writespace-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "virtual-device-client-writespace"
+      resources:
+        requests:
+          storage: 1Gi
+  template:
+    metadata:
+      labels:
+        app: virtual-device-client
+    spec:
+      containers: 
+      - name: virtual-device-client
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-virtual-device-client:v1.0
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: virtual-device-client
+          - name: writespace-volume
+            mountPath: /app/tmp
+            subPath: tmp
+          # - name: writespace-volume
+          #   mountPath: /app/workspace
+          #   subPath: workspace
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+          requests:
+            memory: "20Mi"
+            cpu: "10m"
+          limits:
+            memory: "100Mi"
+            cpu: "100m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: virtual-device-client-config
+            items:
+            - key: k8s-config.json
+              path: config.json
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun

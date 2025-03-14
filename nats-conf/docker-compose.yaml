@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  nats-server:
+    container_name: nats-server
+    restart: unless-stopped
+    image: nats:2.1.8-alpine3.11
+    ports: 
+      - "4222:4222"
+    volumes:
+      - ./conf/nats.conf:/etc/nats-config/nats.conf:ro
+      - nats_pid:/var/run/nats:rw
+    networks: 
+      - nats_network
+      - device_control_v2
+    command: ["nats-server", "--config", "/etc/nats-config/nats.conf"]
+  
+  stan-server:
+    container_name: stan-server
+    restart: unless-stopped
+    image: nats-streaming:0.18.0
+    volumes: 
+      - ./conf/stan.conf:/etc/stan-config/stan.conf:ro
+      - ./data:/data:rw
+    networks: 
+      - nats_network
+      - device_control_v2
+    depends_on:
+      - "nats-server"
+    command: ["-sc", "/etc/stan-config/stan.conf"]
+
+volumes:
+  nats_pid: {}
+networks: 
+  nats_network:
+  device_control_v2:
+    external: 
+        name: device_control_v2

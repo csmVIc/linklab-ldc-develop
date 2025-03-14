@@ -1,0 +1,61 @@
+{
+  "calltest": {
+    "login": {
+      "username": "UserTest",
+      "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+    },
+    "compile": {
+      "needcompile": true,
+      "sourcepath": "./source/Haas100-HelloWorld.zip",
+      "randomfilename": "aos.mk",
+      "compiletype": "alios-haas",
+      "boardtype": "haas100"
+    },
+    "test": {
+      "groups": [
+        {
+          "beginid": 1,
+          "totaltimes": 1,
+          "step": 50,
+          "endtimes": 1
+        }
+      ],
+      "datadir": "data"
+    },
+    "burn": {
+      "boardname": "Haas100",
+      "runtime": 60,
+      "filerandom": false,
+      "filesize": 491840,
+      "retrytimes": 5,
+      "filepath": "./bin/Haas100.bin"
+    },
+    "endchan": {
+      "size": 10
+    },
+    "api": {
+      "login": {
+        "url": "http://kubernetes.tinylink.cn/linklab/device-control-v2/login-authentication/user/login"
+      },
+      "fileupload": {
+        "url": "http://kubernetes.tinylink.cn/linklab/device-control-v2/file-cache/api/file"
+      },
+      "burn": {
+        "url": "http://kubernetes.tinylink.cn/linklab/device-control-v2/user-service/api/device/burn"
+      },
+      "websocket": {
+        "url": "ws://kubernetes.tinylink.cn/linklab/device-control-v2/user-service/api/ws"
+      },
+      "compileupload": {
+        "url": "http://kubernetes.tinylink.cn/linklab/compilev2/api/compile"
+      },
+      "compiledownload": {
+        "url": "http://kubernetes.tinylink.cn/linklab/compilev2/api/compile/block"
+      }
+    },
+    "ossquery": {
+      "podmetrics": "./influx-podmetrics.sh",
+      "nodemetrics": "./influx-nodemetrics.sh"
+    }
+  }
+}

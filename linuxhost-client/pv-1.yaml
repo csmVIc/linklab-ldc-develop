@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: linuxhost-client-writespace-pv-1
+  namespace: linklab
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: linuxhost-client-writespace
+  hostPath:
+    path: "/root/yangg/device-control-v2/nfs/data/linuxhost-client/writespace-1"

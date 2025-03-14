@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cloud-test
+spec:
+  containers:
+  - name: cloud-test
+    image:  edge_cloud
+    command: ["/bin/bash"]
+    args: ["-c", "while true; do date; sleep 10; done"]

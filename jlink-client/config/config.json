@@ -1,0 +1,120 @@
+{
+    "mqtt": {
+        "client": {
+            "url": "tcp://47.111.141.133:31077",
+            "username": "ClientTest-100",
+            "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+        },
+        "monitor": {
+            "maxdisconnwait": 1
+        },
+        "publish": {
+            "timeout": 60
+        }
+    },
+    "topic": {
+        "deviceburn": {
+            "chantimeout": 10
+        },
+        "topics": {
+            "heartbeat": {
+                "pub": "clients/%v/%v/publish/client/heartbeat",
+                "refuse": "clients/%v/%v/subscribe/client/heartbeat/refuse"
+            },
+            "deviceupdate": {
+                "pub": "clients/%v/%v/publish/device/update",
+                "refuse": "clients/%v/%v/subscribe/device/update/refuse"
+            },
+            "authtoken": {
+                "sub": "clients/%v/%v/subscribe/auth/token",
+                "refuse": "clients/%v/%v/subscribe/auth/refuse"
+            },
+            "deviceburn": {
+                "sub": "clients/%v/%v/subscribe/device/burn",
+                "pub": "clients/%v/%v/publish/device/burnresult",
+                "refuse": "clients/%v/%v/subscribe/device/burnresult/refuse"
+            },
+            "devicelog": {
+                "pub": "clients/%v/%v/publish/log/upload",
+                "refuse": "clients/%v/%v/subscribe/log/upload/refuse"
+            },
+            "endrun": {
+                "pub": "clients/%v/%v/publish/device/endrun",
+                "refuse": "clients/%v/%v/subscribe/device/endrun/refuse"
+            },
+            "cmdwrite": {
+                "sub": "clients/%v/%v/subscribe/device/write"
+            }
+        }
+    },
+    "iotnode": {
+        "burn": {
+            "maxretrytimes": 1
+        },
+        "deviceerror": {
+            "chansize": 10,
+            "timeout": 3
+        },
+        "devicelog": {
+            "logchansize": 50,
+            "logtimeoutmill": 100,
+            "logsendtimeoutmill": 10000,
+            "readsleepmill": 100,
+            "tasktimeoutmill": 100
+        },
+        "chan": {
+            "cmdsize": 10
+        },
+        "commands": {
+            "nRF52840": {
+                "burn": "python3 tool/nRF52840/shell/mass_flash.py -f %v -s %v",
+                "reset": "",
+                "baudrate": 0,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/nRF52840/empty.bin",
+                "wifissid": "",
+                "wifipassword": "",
+                "scancmd": "pylink emulator -l usb",
+                "rttcmd": "python3 tool/nRF52840/shell/log_reader2.py -s %v"
+            }
+        }
+    },
+    "monitor": {
+        "heartbeat": {
+            "timeout": 10
+        },
+        "deviceupdate": {
+            "timeout": 20,
+            "detectintervalmill": 100
+        },
+        "chan": {
+            "burnsize": 10,
+            "tasksize": 10,
+            "cmdsize": 10
+        },
+        "token": {
+            "inittimeout": 10
+        },
+        "cmdwrite": {
+            "threadmultiple": 10
+        },
+        "burn": {
+            "threadmultiple": 100,
+            "maxfiledownloadretry": 10,
+            "filedownloadretryinterval": 2
+        },
+        "task": {
+            "threadmultiple": 100
+        },
+        "api": {
+            "tmpdir": "./tmp",
+            "token": {
+                "chansize": 10
+            },
+            "filedownload": {
+                "url": "https://kubernetes.tinylink.cn/linklab/device-control-v2/file-cache/api/file"
+            }
+        }
+    }
+}

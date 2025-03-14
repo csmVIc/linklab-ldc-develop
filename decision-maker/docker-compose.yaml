@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+
+    decision-maker:
+        container_name: decision-maker
+        restart: unless-stopped
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-decision-maker:v1.0
+        volumes: 
+            - ./config/config.json:/app/config/config.json:ro
+            - ./log:/app/log
+        networks: 
+            - device_control_v2
+
+networks: 
+    device_control_v2:
+        external: 
+            name: device_control_v2
+        

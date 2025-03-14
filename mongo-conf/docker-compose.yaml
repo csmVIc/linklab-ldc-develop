@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+    mongo-server.1:
+        hostname: mongo-server.1
+        container_name: mongo-server.1
+        restart: unless-stopped
+        image: mongo:4.2.9
+        expose:
+            - 27017
+        volumes: 
+            - ./conf/mongodb.key:/key/mongodb.key:ro
+            - ./conf/init-mongo.js:/setup/init-mongo.js:ro
+            - ./data/mongo-server.1:/data:rw
+        ports: 
+            - "27017:27017"
+        networks: 
+            - mongo_network
+            - device_control_v2
+        command: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+        # command: ["mongod", "--bind_ip_all", "--replSet", "rs0", "--auth", "--keyFile", "/key/mongodb.key"]
+    mongo-server.2:
+        hostname: mongo-server.2
+        container_name: mongo-server.2
+        restart: unless-stopped
+        image: mongo:4.2.9
+        expose:
+            - 27017
+        volumes: 
+            - ./conf/mongodb.key:/key/mongodb.key:ro
+            - ./data/mongo-server.2:/data:rw
+        ports: 
+            - "27018:27017"
+        networks: 
+            - mongo_network
+            - device_control_v2
+        command: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+        # command: ["mongod", "--bind_ip_all", "--replSet", "rs0", "--auth", "--keyFile", "/key/mongodb.key"]
+    mongo-server.3:
+        hostname: mongo-server.3
+        container_name: mongo-server.3
+        restart: unless-stopped
+        image: mongo:4.2.9
+        expose:
+            - 27017
+        volumes: 
+            - ./conf/mongodb.key:/key/mongodb.key:ro
+            - ./data/mongo-server.3:/data:rw
+        ports: 
+            - "27019:27017"
+        networks: 
+            - mongo_network
+            - device_control_v2
+        command: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+        # command: ["mongod", "--bind_ip_all", "--replSet", "rs0", "--auth", "--keyFile", "/key/mongodb.key"]
+    mongo-setup:
+        restart: "no"
+        image: mongo:4.2.9
+        depends_on:
+            - mongo-server.1
+            - mongo-server.2
+            - mongo-server.3
+        volumes: 
+            - ./conf/mongo_setup.sh:/setup/mongo_setup.sh:ro
+            - ./conf/init-replicaset.js:/setup/init-replicaset.js:ro
+        networks: 
+            - mongo_network
+        entrypoint: [ "bash", "/setup/mongo_setup.sh"]
+    
+networks: 
+    mongo_network:
+
+    device_control_v2:
+        external: 
+            name: device_control_v2

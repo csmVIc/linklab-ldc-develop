@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: log-data-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: log-data
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: "/home/yangg/Documents/code/go/device-control-v2/nfs/data/log/data"
+    server: 10.214.149.214

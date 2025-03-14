@@ -1,0 +1,84 @@
+{
+    "compile": {
+        "commands": {
+            "esp32idf": {
+                "type": "compile",
+                "supsys": false,
+                "branch": "master",
+                "rootdir": "/app/workspace",
+                "indir": "/app/workspace/example/main",
+                "outdir": "/app/workspace/example/main/build",
+                "rregex": "^[a-zA-Z].*\\.bin",
+                "cmd": "cd /app/workspace/example/main && export IDF_PATH=/app/esp/esp-idf &&. /app/esp/esp-idf/export.sh && idf.py set-target esp32 && idf.py build",
+                "errflag": "Error"
+            }
+        },
+        "directory": {
+            "tmp": "./tmp",
+            "workspace": "./workspace",
+            "initzip": "./init/esp32idf.zip"
+        },
+        "channel": {
+            "size": 5,
+            "timeout": 180
+        }
+    },
+    "subscriber": {
+        "example": {
+            "topic": "compile.task",
+            "queue": "worker"
+        },
+        "system": {
+            "topic": "compile.system",
+            "queue": "worker"
+        }
+    },
+    "log": {
+        "logs": {
+            "compilelog": {
+                "pointname": "compilelog"
+            }
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    }
+}

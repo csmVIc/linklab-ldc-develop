@@ -1,0 +1,5 @@
+## permission
+ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="666", GROUP="plugdev"
+
+## TelosB
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK="TelosB-%s{devpath}"

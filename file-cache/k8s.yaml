@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-cache
+  namespace: linklab
+spec:
+  type: NodePort
+  ports:
+  - port: 8083
+    nodePort: 32710
+  selector:
+    app: file-cache
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: file-cache
+  namespace: linklab
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: file-cache
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 200
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: file-cache
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-cache
+  template:
+    metadata:
+      labels:
+        app: file-cache
+    spec:
+      containers: 
+      - name: file-cache
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-file-cache:v2.0-beta
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8083
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: file-cache
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+          requests:
+            memory: "10Mi"
+            cpu: "10m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: file-cache-config
+            items:
+            - key: k8s-config.json
+              path: config.json
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun

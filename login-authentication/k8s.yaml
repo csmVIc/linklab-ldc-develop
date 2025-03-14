@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-authentication
+  namespace: linklab
+spec:
+  type: NodePort
+  ports:
+  - port: 8082
+    nodePort: 31285
+  selector:
+    app: login-authentication
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: login-authentication
+  namespace: linklab
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: login-authentication
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 200
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: login-authentication
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: login-authentication
+  template:
+    metadata:
+      labels:
+        app: login-authentication
+    spec:
+      containers: 
+      - name: login-authentication
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-login-authentication:v2.1-beta
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: login-authentication
+        resources:
+          requests:
+            memory: "10Mi"
+            cpu: "10m"
+          limits:
+            memory: "120Mi"
+            cpu: "500m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: login-authentication-config
+            items:
+            - key: k8s-config.json
+              path: config.json
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun

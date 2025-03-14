@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-file-service
+  namespace: linklab
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: static-file-service
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: static-file-service-data-pvc
+  namespace: linklab
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: static-file-service-data
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: static-file-service
+  namespace: linklab
+spec:
+  rules:
+  - host: kubernetes.tinylink.cn
+    http:
+      paths:
+      - path: /.well-known
+        pathType: Prefix
+        backend:
+          service:
+            name: static-file-service
+            port: 
+              number: 80
+  - host: kubernetes.test.tinylink.cn
+    http:
+      paths:
+      - path: /.well-known
+        pathType: Prefix
+        backend:
+          service:
+            name: static-file-service
+            port: 
+              number: 80
+  - host: kubernetes.wss.tinylink.cn
+    http:
+      paths:
+      - path: /.well-known
+        pathType: Prefix
+        backend:
+          service:
+            name: static-file-service
+            port: 
+              number: 80
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: static-file-service
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: static-file-service
+  template:
+    metadata:
+      labels:
+        app: static-file-service
+    spec:
+      containers: 
+      - name: static-file-service
+        image: nginx:stable
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: data-volume
+          mountPath: /usr/share/nginx
+      volumes:
+      - name: config-volume
+        configMap:
+          name: static-file-service-config
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: static-file-service-data-pvc

@@ -1,0 +1,279 @@
+{
+    "mqtt": {
+        "client": {
+            "url": "tcp://47.110.56.96:31077",
+            "username": "ClientTest-60",
+            "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+        },
+        "monitor": {
+            "maxdisconnwait": 1
+        },
+        "publish": {
+            "timeout": 60
+        }
+    },
+    "topic": {
+        "deviceburn": {
+            "chantimeout": 10
+        },
+        "topics": {
+            "heartbeat": {
+                "pub": "clients/%v/%v/publish/client/heartbeat",
+                "refuse": "clients/%v/%v/subscribe/client/heartbeat/refuse"
+            },
+            "deviceupdate": {
+                "pub": "clients/%v/%v/publish/device/update",
+                "refuse": "clients/%v/%v/subscribe/device/update/refuse"
+            },
+            "authtoken": {
+                "sub": "clients/%v/%v/subscribe/auth/token",
+                "refuse": "clients/%v/%v/subscribe/auth/refuse"
+            },
+            "deviceburn": {
+                "sub": "clients/%v/%v/subscribe/device/burn",
+                "pub": "clients/%v/%v/publish/device/burnresult",
+                "refuse": "clients/%v/%v/subscribe/device/burnresult/refuse"
+            },
+            "devicelog": {
+                "pub": "clients/%v/%v/publish/log/upload",
+                "refuse": "clients/%v/%v/subscribe/log/upload/refuse"
+            },
+            "endrun": {
+                "pub": "clients/%v/%v/publish/device/endrun",
+                "refuse": "clients/%v/%v/subscribe/device/endrun/refuse"
+            },
+            "cmdwrite": {
+                "sub": "clients/%v/%v/subscribe/device/write"
+            }
+        }
+    },
+    "iotnode": {
+        "burn": {
+            "maxretrytimes": 1
+        },
+        "deviceerror": {
+            "chansize": 10,
+            "timeout": 3
+        },
+        "devicelog": {
+            "logchansize": 50,
+            "logtimeoutmill": 100,
+            "logsendtimeoutmill": 10000,
+            "readsleepmill": 100,
+            "tasktimeoutmill": 100
+        },
+        "chan": {
+            "cmdsize": 10
+        },
+        "commands": {
+            "ArduinoMega2560": {
+                "burn": "./tool/Arduino/%v/avrdude -Ctool/Arduino/%v/avrdude.conf -v -patmega2560 -cwiring -P%v -b115200 -D -Uflash:w:%v:i",
+                "reset": "",
+                "baudrate": 9600,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/ArduinoMega2560/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "ESP32DevKitC": {
+                "burn": "esptool.py --chip esp32 --port %v --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 40m --flash_size detect 0x1000 tool/ESP32DevKitC/bin/alios/bootloader.bin 0x8000 tool/ESP32DevKitC/bin/alios/custom_partitions.bin 0x10000 %v",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "netmgr connect linklab-wifi-3 eagle402\r\n",
+                "networkscan": "MQTT handler is null",
+                "emptyprogram": "./bin/ESP32DevKitC/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "ArduinoUno": {
+                "burn": "./tool/Arduino/%v/avrdude -Ctool/Arduino/%v/avrdude.conf -v -patmega328p -carduino -P%v -b115200 -D -Uflash:w:%v:i",
+                "reset": "",
+                "baudrate": 9600,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/ArduinoUno/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "TelosB": {
+                "burn": "chmod +x ./tool/TelosB/burn.sh && BURNFILE=%v DEVPORT=%v ./tool/TelosB/burn.sh",
+                "reset": "./tool/TelosB/msp430-bsl-linux --telosb -c %v -r",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/TelosB/empty.sky",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "DeveloperKit": {
+                "burn": "st-flash --reset --serial %v write %v 0x08000000",
+                "reset": "st-flash --serial %v reset",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/DeveloperKit/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "Haas100": {
+                "burn": "python3 ./tool/Haas100/haas100_flash.py --device %v --file %v",
+                "reset": "",
+                "baudrate": 1500000,
+                "networkcmd": "netmgr -t wifi -c linklab-wifi-2 eagle402\r\n",
+                "networkscan": "MQTT handler is null",
+                "emptyprogram": "./bin/Haas100/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "Haas100Python": {
+                "burn": "bash ./tool/Haas100/tftp.sh %v %v %v",
+                "reset": "",
+                "baudrate": 1500000,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "",
+                "wifissid": "linklab-wifi-1",
+                "wifipassword": "eagle402"
+            },
+            "ESP32DevKitCArduino": {
+                "burn": "esptool.py --chip esp32 --port %v --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0xe000 tool/ESP32DevKitC/bin/arduino/boot_app0.bin 0x1000 tool/ESP32DevKitC/bin/arduino/bootloader_qio_80m.bin 0x10000 %v 0x8000 tool/ESP32DevKitC/bin/arduino/partitions.bin",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/ESP32DevKitCArduino/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "STM32F103C8": {
+                "burn": "./tool/STM32F103C8/stm32isp %v %v 115200",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/STM32F103C8/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "STM32F103C8with4G": {
+                "burn": "./tool/STM32F103C8/stm32isp %v %v 115200",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/STM32F103C8/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "STM32F103C8withtest": {
+                "burn": "./tool/STM32F103C8/stm32isp %v %v 115200",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/STM32F103C8/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "ArduinoMega2560WithHC06": {
+                "burn": "./tool/Arduino/%v/avrdude -Ctool/Arduino/%v/avrdude.conf -v -patmega2560 -cwiring -P%v -b115200 -D -Uflash:w:%v:i",
+                "reset": "",
+                "baudrate": 9600,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/ArduinoMega2560/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "Hi3861": {
+                "burn": "curl -X POST -F file=@%v -F device=%v localhost:8080/burn ",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "MQTT handler is null",
+                "emptyprogram": "./bin/Hi3861/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "EDURISCV64": {
+                "burn": "curl -X POST -F file=@%v -F device=%v localhost:8080/burn ",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "MQTT handler is null",
+                "emptyprogram": "./bin/EDURISCV64/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "SmartVilla": {
+                "burn": "./tool/STM32F103C8/stm32isp %v %v 115200",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "",
+                "networkscan": "",
+                "emptyprogram": "./bin/STM32F103C8/empty.hex",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "HaasEDUK1": {
+                "burn": "python ./tool/HaasEDUK1/flash_program.py --serialport=%v --bin=%v",
+                "reset": "",
+                "baudrate": 1500000,
+                "networkcmd": "netmgr -t wifi -c linklab-wifi-2 eagle402\r\n",
+                "networkscan": "MQTT handler is null",
+                "emptyprogram": "./bin/HaasEDUK1/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            },
+            "ESP32DevKitCidf": {
+                "burn": "esptool.py --chip esp32 --port %v --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 40m --flash_size detect 0x1000 tool/ESP32DevKitC/bin/esp32idf/bootloader.bin 0x8000 tool/ESP32DevKitC/bin/esp32idf/partition-table.bin 0x10000 %v",
+                "reset": "",
+                "baudrate": 115200,
+                "networkcmd": "netmgr connect linklab-wifi-3 eagle402\r\n",
+                "networkscan": "MQTT handler is null",
+                "emptyprogram": "./bin/ESP32DevKitC/empty.bin",
+                "wifissid": "",
+                "wifipassword": ""
+            }
+
+        }
+    },
+    "monitor": {
+        "heartbeat": {
+            "timeout": 10
+        },
+        "deviceupdate": {
+            "timeout": 20,
+            "detectintervalmill": 100
+        },
+        "chan": {
+            "burnsize": 10,
+            "tasksize": 10,
+            "cmdsize": 10
+        },
+        "token": {
+            "inittimeout": 10
+        },
+        "cmdwrite": {
+            "threadmultiple": 10
+        },
+        "burn": {
+            "threadmultiple": 100,
+            "maxfiledownloadretry": 10,
+            "filedownloadretryinterval": 2
+        },
+        "task": {
+            "threadmultiple": 100
+        },
+        "api": {
+            "tmpdir": "./tmp",
+            "token": {
+                "chansize": 10
+            },
+            "filedownload": {
+                "url": "https://kubernetes.kaiwutech.cn/linklab/device-control-v2/file-cache/api/file"
+            }
+        }
+    }
+}

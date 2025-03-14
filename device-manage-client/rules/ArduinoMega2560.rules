@@ -1,0 +1,11 @@
+## permission
+ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0242", MODE="666", GROUP="plugdev"
+ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0042", MODE="666", GROUP="plugdev"
+ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0042", MODE="666", GROUP="plugdev"
+ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="666", GROUP="plugdev"
+
+## ArduinoMega2560
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0242", SYMLINK="ArduinoMega2560-%s{devpath}"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0042", SYMLINK="ArduinoMega2560-%s{devpath}"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0042", SYMLINK="ArduinoMega2560-%s{devpath}"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK="ArduinoMega2560-%s{devpath}"

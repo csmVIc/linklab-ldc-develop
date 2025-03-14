@@ -1,0 +1,115 @@
+{
+    "server": {
+        "address": {
+            "host": "0.0.0.0",
+            "port": "80"
+        },
+        "podlog": {
+            "outchansize": 1000
+        }
+    },
+    "mqtt": {
+        "client": {
+            "url": "tcp://47.111.141.133:31077",
+            "username": "EdgeClient-0",
+            "password": "4cbc7eb5c02f16dc12a492cefe5e3fdbe65edb0b3910463c0d5101402e7ca230",
+            "connect_timeout": "30s",   
+            "retry_interval": "5s",      
+            "max_retries": 3            
+        },
+        "monitor": {
+            "maxdisconnwait": 1
+        },
+        "publish": {
+            "timeout": 60
+        }
+    },
+    "edgenode": {
+        "k8sclient": {
+            "incluster": true,
+            "kubeconfig": ""
+        },
+        "k8spod": {
+            "systemnamespaces": {
+                "kube-node-lease": true,
+                "kube-public": true,
+                "kube-system": true,
+                "linklab": true,
+                "ingress-nginx": true
+            }
+        },
+        "podlog": {
+            "chantimeout": 60
+        },
+        "imagebuild": {
+            "registryaddress": "192.168.88.112:5000",
+            "builddownloadurl": "https://kubernetes.tinylink.cn/linklab/device-control-v2/file-cache/api/imagebuild"
+        },
+        "ingress": {
+            "domain": "edgeclient0.user.tinylink.cn"
+        }
+    },
+    "topic": {
+        "topics": {
+            "heartbeat": {
+                "pub": "clients/%v/%v/publish/client/heartbeat",
+                "refuse": "clients/%v/%v/subscribe/client/heartbeat/refuse"
+            },
+            "authtoken": {
+                "sub": "clients/%v/%v/subscribe/auth/token",
+                "refuse": "clients/%v/%v/subscribe/auth/refuse"
+            },
+            "edgenodeupdate": {
+                "pub": "clients/%v/%v/publish/edgenode/update",
+                "refuse": "clients/%v/%v/subscribe/edgenode/update/refuse"
+            },
+            "podupdate": {
+                "pub": "clients/%v/%v/publish/pod/update",
+                "refuse": "clients/%v/%v/subscribe/pod/update/refuse"
+            },
+            "edgenoderesource": {
+                "pub": "clients/%v/%v/publish/edgenode/resource",
+                "refuse": "clients/%v/%v/subscribe/edgenode/resource/refuse"
+            },
+            "podresource": {
+                "pub": "clients/%v/%v/publish/pod/resource",
+                "refuse": "clients/%v/%v/subscribe/pod/resource/refuse"
+            },
+            "edgenodesetup": {
+                "pub": "clients/%v/%v/publish/edgenode/setup",
+                "refuse": "clients/%v/%v/subscribe/edgenode/setup/refuse"
+            }
+        }
+    },
+    "monitor": {
+        "heartbeat": {
+            "timeout": 10
+        },
+        "token": {
+            "inittimeout": 10
+        },
+        "deviceupdate": {
+            "timeout": 20,
+            "detectintervalmill": 2000
+        },
+        "podupdate": {
+            "timeout": 20,
+            "detectintervalmill": 2000
+        },
+        "resourseupdate": {
+            "interval": 5
+        },
+        "edgenodesetup": {
+            "host": "edgeclient0.tinylink.cn"
+        },
+        "api": {
+            "tmpdir": "./tmp",
+            "token": {
+                "chansize": 10
+            },
+            "podyamldownload": {
+                "url": "https://kubernetes.tinylink.cn/linklab/device-control-v2/file-cache/api/podyaml"
+            }
+        }
+    }
+}

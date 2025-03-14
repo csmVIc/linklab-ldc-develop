@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: device-manage-client
+  namespace: linklab
+  labels:
+    k8s-app: device-manage-client
+spec:
+  selector:
+    matchLabels:
+      name: device-manage-client
+  template:
+    metadata:
+      labels:
+        name: device-manage-client
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: linklab/device.manage.client
+                operator: Exists
+      imagePullSecrets:
+      - name: linklab-aliyun
+      containers:
+      - name:  device-manage-client
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-device-manage-client:v1.6-amd64
+        imagePullPolicy:  IfNotPresent
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        - name: dev-volume
+          mountPath: /dev
+          readOnly: false
+      volumes:
+      - name: config-volume
+        hostPath:
+          path: /home/pi/linklab-ldc/device-manage-client/config
+      - name: dev-volume
+        hostPath:
+          path: /dev

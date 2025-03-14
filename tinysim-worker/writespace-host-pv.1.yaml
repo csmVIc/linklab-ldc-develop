@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: linklab-compilev2-tinysim-worker-writespace.1-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: linklab-compilev2-tinysim-worker-writespace
+  hostPath:
+    path: /root/yangg/device-control-v2/nfs/data/compile-worker/tinysim-worker/writespace.1

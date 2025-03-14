@@ -1,0 +1,68 @@
+# ---
+# apiVersion: autoscaling/v1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: decision-maker
+#   namespace: linklab
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: decision-maker
+#   minReplicas: 1
+#   maxReplicas: 1
+#   targetCPUUtilizationPercentage: 200
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: decision-maker
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: decision-maker
+  template:
+    metadata:
+      labels:
+        app: decision-maker
+    spec:
+      containers: 
+      - name: decision-maker
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-decision-maker:v2.0-beta
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: decision-maker
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+          requests:
+            memory: "10Mi"
+            cpu: "10m"
+          limits:
+            memory: "100Mi"
+            cpu: "500m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: decision-maker-config
+            items:
+            - key: k8s-config.json
+              path: config.json
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun

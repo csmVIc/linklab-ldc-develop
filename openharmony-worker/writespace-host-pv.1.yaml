@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: linklab-compilev2-openharmony-worker-writespace.1-pv
+  namespace: linklab
+spec:
+  capacity:
+    storage: 20Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: linklab-compilev2-openharmony-worker-writespace
+  hostPath:
+    path: /home/kaikai/new-linklab/linklab-ldc/nfs/data/compile-worker/openharmony-worker/writespace.1

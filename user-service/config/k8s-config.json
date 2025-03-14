@@ -1,0 +1,128 @@
+{
+    "server": {
+        "address": {
+            "host": "0.0.0.0",
+            "port": "8080"
+        },
+        "ws": {
+            "timeout": 300,
+            "chansize": 10,
+            "msg": {
+                "topic": "users.log.%v"
+            }
+        },
+        "device": {
+            "tasknumlimit": {
+                "maxtasknum": 10,
+                "mintasknum": 1
+            },
+            "taskruntimelimit": {
+                "maxruntime": 600,
+                "minruntime": 5
+            },
+            "msg": {
+                "topic": "tasks.wait",
+                "replytimeout": 30
+            },
+            "cmd": {
+                "topic": "clients.cmd.write.%v",
+                "replytimeout": 5
+            },
+            "group": {
+                "maxboardslen": 5,
+                "topic": "tasks.group.wait",
+                "replytimeout": 30
+            },
+            "registry": {
+                "registryaddress": "47.111.141.133:20018"
+            }
+        },
+        "client": {
+            "clienttenant": {
+                "clientcachettl": 120
+            }
+        },
+        "edgenode": {
+            "podapply": {
+                "topic": "edgeclients.pod.apply",
+                "replytimeout": 15
+            },
+            "imagebuild": {
+                "topic": "edgeclients.image.build",
+                "replytimeout": 15
+            },
+            "podlog": {
+                "msgforwardchansize": 10
+            }
+        }
+    },
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    },
+    "redis": {
+        "client": {
+            "address": [
+                {
+                    "host": "redis-server-master",
+                    "port": "6379"
+                },
+                {
+                    "host": "redis-server-slave",
+                    "port": "6379"
+                }
+            ],
+            "password": "41eb37269c0525a25ea19b59f65d12414f103556e5ab1f7a7e7d3e3553ee9941"
+        },
+        "distributedlock": {
+            "timeout": 80,
+            "maxretry": 800,
+            "rintervalms": 100
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "saasbackend": {
+        "usersite": {
+            "url": "https://api.tinylink.cn/user/site"
+        },
+        "siteinfo": {
+            "url": "https://api.tinylink.cn/site/info"
+        }
+    }
+}

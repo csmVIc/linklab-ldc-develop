@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: login-authentication
+  namespace: linklab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /user/$2
+spec:
+  rules:
+  - host: kubernetes.tinylink.cn
+    http:
+      paths:
+      - path: /linklab/device-control-v2/login-authentication/user(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: login-authentication
+            port: 
+              number: 8082

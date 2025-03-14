@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+
+    aibox-client:
+        container_name: aibox-client
+        restart: unless-stopped
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-aibox-client:v1.0
+        volumes: 
+            - ./config/config.json:/app/config/config.json:ro
+            - ./workspace:/app/workspace:rw
+            - ./tmp:/app/tmp:rw
+            - ./log:/app/log:rw
+            - /root/AIBox:/app/data:rw
+        networks: 
+            - aibox_client
+
+networks: 
+    aibox_client:

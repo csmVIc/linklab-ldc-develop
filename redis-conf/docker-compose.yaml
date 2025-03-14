@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  redis-server:
+    user: root
+    container_name: redis-server
+    restart: unless-stopped
+    image: redis:6.0.7-alpine3.12
+    volumes: 
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./data:/data:rw
+    ports: 
+      - "6379:6379"
+    networks: 
+      - redis_network
+      - device_control_v2
+    command: redis-server /usr/local/etc/redis/redis.conf
+    
+networks: 
+    redis_network:
+    device_control_v2:
+      external: 
+          name: device_control_v2

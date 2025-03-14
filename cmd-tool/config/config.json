@@ -1,0 +1,34 @@
+{
+  "interface": {
+    "iotnode": {
+      "listurl": "http://47.111.77.0:31958/api/device/listuserdevice",
+      "cmdurl": "http://47.111.77.0:31958/api/device/cmd"
+    },
+    "edgenode": {
+      "nodelisturl": "http://47.111.77.0:31958/api/edgenode/list",
+      "noderesourceurl": "http://47.111.77.0:31958/api/edgenode/resource/list",
+      "podlisturl": "http://47.111.77.0:31958/api/pod/list",
+      "podresourceurl": "http://47.111.77.0:31958/api/pod/resource/list",
+      "podyamluploadurl": "http://47.111.77.0:32710/api/podyaml",
+      "podapplyurl": "http://47.111.77.0:31958/api/pod/apply",
+      "poddeleteurl": "http://47.111.77.0:31958/api/pod/delete",
+      "podlogurl": "ws://47.111.77.0:31958/api/pod/log",
+      "podexecurl": "ws://47.111.77.0:31958/api/pod/exec",
+      "imagesourceuploadurl": "http://47.111.77.0:32710/api/imagebuild",
+      "imagebuildurl": "http://47.111.77.0:31958/api/image/build"
+    },
+    "user": {
+      "loginurl": "http://47.111.77.0:31285/user/login"
+    },
+    "devicebindgroup": {
+      "creategroupurl": "http://47.111.77.0:31958/api/device/creategroup",
+      "linkgroupurl": "http://47.111.77.0:31958/api/device/linkgroup",
+      "unlinkgroupurl": "http://47.111.77.0:31958/api/device/unlinkgroup",
+      "listlinkgroupurl": "http://47.111.77.0:31958/api/device/listlinkgroup",
+      "listdefinegroupurl": "http://47.111.77.0:31958/api/device/listdefinegroup"
+    }
+  },
+  "login": {
+    "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+  }
+}

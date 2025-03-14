@@ -1,0 +1,125 @@
+{
+    "influx": {
+        "client": {
+            "url": "http://influxdb-server:8086",
+            "username": "devicecontroller",
+            "password": "12",
+            "batchsize": 60,
+            "flushinterval": 1000,
+            "usegzip": true,
+            "database": "devicecontrollog",
+            "healthcheckinterval": 10
+        },
+        "chans": {
+            "size": 10,
+            "timeout": 1,
+            "threadmultiple": 1
+        }
+    },
+    "redis": {
+        "client": {
+            "address": [
+                {
+                    "host": "redis-server-master",
+                    "port": "6379"
+                },
+                {
+                    "host": "redis-server-slave",
+                    "port": "6379"
+                }
+            ],
+            "password": "41eb37269c0525a25ea19b59f65d12414f103556e5ab1f7a7e7d3e3553ee9941"
+        },
+        "distributedlock": {
+            "timeout": 80,
+            "maxretry": 1600,
+            "rintervalms": 100
+        }
+    },
+    "nats": {
+        "client": {
+            "url": "nats://nats-server:4222",
+            "clusterid": "stan",
+            "needstan": false
+        }
+    },
+    "mongo": {
+        "client": {
+            "user": "DeviceControl",
+            "password": "12",
+            "db": "linklab",
+            "address": [
+                {
+                    "host": "mongo-server-headless",
+                    "port": "27017"
+                }
+            ],
+            "replicaset": "rs0"
+        },
+        "transaction": {
+            "timeout": 5
+        }
+    },
+    "mqtt": {
+        "client": {
+            "url": "tcp://emqx-server-headless:1883",
+            "username": "DeviceControl",
+            "password": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+        },
+        "monitor": {
+            "maxdisconnwait": 1
+        },
+        "publish": {
+            "timeout": 120
+        }
+    },
+    "msgforward": {
+        "threadmultiple": 1,
+        "burn": {
+            "msgtopic": "clients.cmd.burn.*",
+            "chansize": 10,
+            "mqtttopic": "clients/%v/%v/subscribe/device/burn"
+        }, 
+        "write": {
+            "msgtopic": "clients.cmd.write.*",
+            "chansize": 10,
+            "mqtttopic": "clients/%v/%v/subscribe/device/write"
+        }
+    },
+    "topic": {
+        "endrun": {
+            "msgtopic": "users.log.%v",
+            "refusetopic": "clients/%v/%v/subscribe/device/endrun/refuse"
+        },
+        "burnresult": {
+            "msgtopic": "users.log.%v",
+            "refusetopic": "clients/%v/%v/subscribe/device/burnresult/refuse"
+        },
+        "execerr": {
+            "msgtopic": "users.log.%v",
+            "refusetopic": "clients/%v/%v/subscribe/device/execerr/refuse"
+        }
+    },
+    "log": {
+        "logs": {
+            "burnresult": {
+                "pointname": "burnresult"
+            },
+            "endrun": {
+                "pointname": "endrun"
+            },
+            "burntask": {
+                "pointname": "burntask"
+            },
+            "execerr": {
+                "pointname": "execerr"
+            },
+            "cmdwrite": {
+                "pointname": "cmdwrite"
+            }
+        }
+    },
+    "problemsystem": {
+        "url": "http://judge.tinylink.cn/judge/{operate}"
+    }
+}

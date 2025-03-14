@@ -1,0 +1,57 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metrics-reader
+rules:
+- apiGroups: ["metrics.k8s.io", ""]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: read-metrics
+  namespace: linklab
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: linklab
+roleRef:
+  kind: ClusterRole
+  name: metrics-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: resource-monitoring
+  namespace: linklab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-monitoring
+  template:
+    metadata:
+      labels:
+        app: resource-monitoring
+    spec:
+      containers: 
+      - name: resource-monitoring
+        image: registry.cn-hangzhou.aliyuncs.com/linklab/device-control-v2-resource-monitoring:v1.0
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: resource-monitoring-config-volume
+            mountPath: /app/config
+          # - name: log-volume
+          #   mountPath: /app/log
+          #   subPath: resource-monitoring
+      volumes:
+        - name: resource-monitoring-config-volume
+          configMap:
+            name: resource-monitoring-config
+        # - name: log-volume
+        #   persistentVolumeClaim:
+        #     claimName: log-data-pvc
+      imagePullSecrets:
+        - name: linklab-aliyun
